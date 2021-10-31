@@ -1,6 +1,8 @@
 const Block = require('./models/Block');
 const db = require('./db');
-const { blockTime, TARGET_DIFFICULTY } = require('./config');
+const { blockTime, PUBLIC_KEY, TARGET_DIFFICULTY, BLOCK_REWARD } = require('./config');
+const Tx = require('./models/Tx');
+const UTXO = require('./models/UTXO');
 
 class Miner {
     constructor(){
@@ -20,16 +22,25 @@ class Miner {
         if(!this.mining) return;
 
         const block = new Block();
+        let hash = block.hash()
 
-        while(block.hash() >= TARGET_DIFFICULTY) {
+        const coinbaseUTXO = new UTXO(PUBLIC_KEY, BLOCK_REWARD);
+        const coinbaseTx = new Tx([], [coinbaseUTXO])
+        block.addTransaction(coinbaseTx)
+
+        while(BigInt('0x' + block.hash()) >= TARGET_DIFFICULTY) {
             block.nonce++;
         }
+
+        block.execute();
+
+        console.log(block.transactions[0])
 
         db.blockchain.addBlock(new Block);
         console.log(`Block has Been Mined
         Number: ${db.blockchain.blockHeight()}
         Nonce: ${block.nonce}
-        Hash: ${block.hash()}
+        Hash: 0x${block.hash().toString(16)}
         `);
 
         setTimeout(this.mine.bind(this), blockTime);

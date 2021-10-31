@@ -1,5 +1,8 @@
 module.exports = {
     PORT: 3000,
     blockTime: 1000,
-    TARGET_DIFFICULTY: BigInt('0x0' + 'F'.repeat(63))
+    TARGET_DIFFICULTY: BigInt("0x000".padEnd(66, "F")),
+    PRIVATE_KEY: '51cd7046610cdfcb5801b2be2c3839c38e6bc4ba3f626eeadf9312f027129a98',
+    PUBLIC_KEY: '048392547707a75f202b8d1e2d7d265a2ca043b6a399b652e7b01192243dc0ee06f03f6398266ac3abecb4b06fd2a56080e0bfc070eb6b06d9982d4f0e5621b468',
+    BLOCK_REWARD: 100
 }
